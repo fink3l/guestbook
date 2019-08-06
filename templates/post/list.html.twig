@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Posts</title>
+</head>
+<body>
+<div>List of post:</div>
+{% for post in posts %}
+    <div>{{ post.getTitle }}</div>
+{% else %}
+    <div>No posts have been found.</div>
+{% endfor %}
+    <div><a href="/add">add new post</a></div>
+</body>
+</html>
