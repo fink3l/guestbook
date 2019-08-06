@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class PostController extends AbstractController
 {
@@ -21,25 +21,28 @@ class PostController extends AbstractController
     private $posts;
 
     /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
-    /**
      * @var PostManagerInterface
      */
     private $manager;
 
     /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
      * @param EntityRepository $posts
      * @param PostManagerInterface $manager
-     * @param UrlGeneratorInterface $urlGenerator
+     * @param SerializerInterface $serializer
      */
-    public function __construct(EntityRepository $posts, PostManagerInterface $manager, UrlGeneratorInterface $urlGenerator)
-    {
+    public function __construct(
+        EntityRepository $posts,
+        PostManagerInterface $manager,
+        SerializerInterface $serializer
+    ) {
         $this->posts = $posts;
-        $this->urlGenerator = $urlGenerator;
         $this->manager = $manager;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -64,6 +67,16 @@ class PostController extends AbstractController
         return $this->render('post/add.html.twig', [
             'form' => $this->getCreateForm()->createView(),
         ]);
+    }
+
+    /**
+     * @return Response
+     */
+    public function export(): Response
+    {
+        $data = $this->serializer->serialize($this->posts->findAll(), 'csv');
+
+        return new Response($data, 200, ['Content-Type' => 'text/csv']);
     }
 
     /**
@@ -93,7 +106,7 @@ class PostController extends AbstractController
         return $this->createForm(
             PostType::class,
             null,
-            ['action' => $this->urlGenerator->generate('post_create')]
+            ['action' => $this->generateUrl('post_create')]
         );
     }
 }

@@ -7,10 +7,13 @@
 <body>
 <div>List of post:</div>
 {% for post in posts %}
-    <div>{{ post.getTitle }}</div>
+    <div>title:{{ post.getTitle }}</div>
+    <div>body:{{ post.getBody }}</div>
+    <div>*******</div>
 {% else %}
     <div>No posts have been found.</div>
 {% endfor %}
     <div><a href="/add">add new post</a></div>
+    <div><a href="/export">export posts</a></div>
 </body>
 </html>

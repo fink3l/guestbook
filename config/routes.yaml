@@ -3,6 +3,11 @@ post_list:
     controller: App\Controller\PostController::list
     methods:    GET
 
+post_list_export:
+  path: /export
+  controller: App\Controller\PostController::export
+  methods:    GET
+
 post_add:
   path: /add
   controller: App\Controller\PostController::add
